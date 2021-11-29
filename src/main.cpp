@@ -358,6 +358,40 @@ void update_epicell(int time_step, Tissue &tissue, GridPoint *grid_point) {
   update_epicell_timer.stop();
 }
 
+// Returns a proportion of the current antibody levels relative to the max
+double get_ab_conc(int time_step) {
+
+  double ab_conc = 0;
+  // Do some magic
+  // use _options->antibody_max;
+
+  double current = 0;
+
+  // no antibodies for first 14 days
+  if (time_step < 20160) {
+    current = 0;
+  }
+  // rapid growth for next 7 days
+  else if (time_step < 30240) {
+    // 142.857153 * (time_step - 20160)
+    current = 142.857153 * (time_step - 20160);
+  }
+  // max for next 28 days
+  else if (time_step < 70560) {
+    current = _options->antibody_max;
+  }
+  // slow decrease for remainder of time
+  else {
+    // (-1 * (time_step - 70560)) + _options->antibody_max;
+    current = (-1 * (time_step - 70560)) + _options->antibody_max;
+  }
+
+
+  ab_conc = current / _options->antibody_max;
+
+  return ab_conc;
+}
+
 void update_chemokines(GridPoint *grid_point, vector<int64_t> &nbs,
                        HASH_TABLE<int64_t, float> &chemokines_to_update) {
   update_concentration_timer.start();
@@ -379,9 +413,11 @@ void update_chemokines(GridPoint *grid_point, vector<int64_t> &nbs,
 }
 
 void update_virions(GridPoint *grid_point, vector<int64_t> &nbs,
-                    HASH_TABLE<int64_t, float> &virions_to_update) {
+                    HASH_TABLE<int64_t, float> &virions_to_update, int time_step) {
   update_concentration_timer.start();
-  grid_point->virions = grid_point->virions * (1.0 - _options->virion_clearance_rate);
+  double ab_conc = get_ab_conc(time_step);
+  //grid_point->virions = grid_point->virions * (1.0 - _options->virion_clearance_rate);
+  grid_point->virions = grid_point->virions * (1.0 - (_options->virion_clearance_rate + ((ab_conc * _options->antibody_scale) * .003)));
   assert(grid_point->virions >= 0);
   if (grid_point->virions > 0) {
     for (auto &nb_grid_i : nbs) {
@@ -711,7 +747,7 @@ void run_sim(Tissue &tissue) {
         update_tissue_tcell(time_step, tissue, grid_point, *nbs, chemokines_cache);
       if (grid_point->epicell) update_epicell(time_step, tissue, grid_point);
       update_chemokines(grid_point, *nbs, chemokines_to_update);
-      update_virions(grid_point, *nbs, virions_to_update);
+      update_virions(grid_point, *nbs, virions_to_update, time_step);
       if (grid_point->is_active()) tissue.set_active(grid_point);
     }
     barrier();

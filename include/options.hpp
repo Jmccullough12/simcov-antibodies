@@ -278,6 +278,10 @@ class Options {
   int sample_resolution = 1;
   int max_block_dim = 10;
 
+  double antibody_max = 1000;
+  double antibody_scale = 1;
+  
+
   bool tcells_follow_gradient = false;
 
   bool show_progress = false;
