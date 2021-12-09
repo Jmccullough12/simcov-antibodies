@@ -423,11 +423,7 @@ class Options {
     app.add_option("--is_vaccinated", is_vaccinated,
                    "Toggle for usage of vaccinated antibody levels")
         ->capture_default_str();
-bool use_antibodies = true;
-double antibody_max = 1000.0;
-double antibody_effect = 0.002;
-double antibody_scale = 1.0;
-bool is_vaccinated = false;
+
 
     auto *cfg_opt = app.set_config("--config", "", "Load options from a configuration file");
 

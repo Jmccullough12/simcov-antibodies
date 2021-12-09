@@ -740,9 +740,9 @@ void run_sim(Tissue &tissue) {
     double ab_conc = 0.0;
     if (_options->use_antibodies) {
       ab_conc = get_ab_conc(time_step);
-      if (time_step > 20000 && ((time_step % 60) == 0)) {
-        cout << "Timestep: " << time_step << ", AB_conc: " << ab_conc << ", current_clearance:" << _options->current_clearance << ", scale: " << _options->antibody_scale << endl;
-      }
+      //if (time_step > 20000 && ((time_step % 60) == 0)) {
+        //cout << "Timestep: " << time_step << ", AB_conc: " << ab_conc << ", current_clearance:" << _options->current_clearance << ", scale: " << _options->antibody_scale << endl;
+      //}
     }
 
     // iterate through all active local grid points and update
