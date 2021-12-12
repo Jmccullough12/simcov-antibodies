@@ -11,7 +11,7 @@ for num in range(9):
                    listy.append((line[0],line[8]))
                count += 1
     resultFile += 1
-#result = [] I # if we want to use this for more complex operations
+#result = [] # if we want to plot
 for range in range(33118):
     countTwo = 0
     sum = 0
