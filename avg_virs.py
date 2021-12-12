@@ -14,10 +14,6 @@ for num in range(9):
                count += 1
     resultFile += 1
 
-
-
-hold = 0
-result = []
 for range in range(33118):
     countTwo = 0
     sum = 0
