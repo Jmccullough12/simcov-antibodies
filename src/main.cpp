@@ -131,7 +131,7 @@ IntermittentTimer log_timer(__FILENAME__ + string(":") + "log");
 double get_ab_conc(int time_step) {
   // Used when patient is vaccinated
   if (_options->is_vaccinated ) {
-    return 0.0;
+    return _options->antibody_scale;
   }
   // Used when patient is not vaccinated
   else {
@@ -145,8 +145,6 @@ double get_ab_conc(int time_step) {
     }
     // rapid growth for next 7 days
     else if (time_step <= 30240) {
-      // 142.857153 * (time_step - 20160)
-      //current = 142.857153 * (time_step - 20160);
       current = ((25.0/252.0) * time_step) - 2000.0;
     }
     // max for next 28 days
@@ -156,13 +154,8 @@ double get_ab_conc(int time_step) {
     }
     // slow decrease for remainder of time
     else {
-    // (-1 * (time_step - 70560)) + _options->antibody_max;
-    //current = (-1 * (time_step - 70560)) + _options->antibody_max;
-    //current = (-1 * (time_step - 70560)) + 1000;
-    //current = current * 0.99999;
       current = _options->antibody_max;
     }
-
 
     ab_conc = ((current / _options->antibody_max) * (_options->antibody_scale));
     //ab_conc = current / 1000;

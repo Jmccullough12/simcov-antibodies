@@ -1,27 +1,59 @@
-for num in range(9):
-    resultFile = 1
-    file = "results_batch_test/" + "simcov" + str(resultFile) + ".stats"
-    listy = []
-    with open(file) as f1:
-           file1 = f1.readlines()
-           count = 0
-           for line in file1:
-               line = line.split('\t')
-               if (count):
-                   listy.append((line[0],line[8]))
-               count += 1
-    resultFile += 1
-#result = [] # if we want to plot
-for range in range(33118):
-    countTwo = 0
-    sum = 0
-    avg = 0
-    for e in listy:
-        if(int(e[0]) == range):
-            sum += float(e[1])
-            if (countTwo < 33120):
-                countTwo+=1
-    avg = sum / 33119
-    output = str(range) + '\t' + str(avg)
-    print(output) # output content manually to a separate file
-    #result.append((range,avg))
+import sys
+import numpy as np
+
+def generateAverage(name, steps):
+    #listy = []
+
+    #for i in range(int(steps)):
+        #listy.append(0.0)
+    listy = np.zeros(int(steps))
+
+    for num in range(10):
+        resultFile = num + 1
+        file = "results_" + name + "_batch/simcov" + str(resultFile) + ".stats"
+
+        with open(file, 'r') as f:
+               file1 = f.readlines()
+               for i in range(int(steps)):
+                   if (i == 0):
+                       continue
+                   line = file1[i].split('\t')
+                   listy[i-1] = listy[i-1] + float(line[8])
+
+        #resultFile += 1
+    #result = [] # if we want to plot
+    for i in range(len(listy)):
+
+        listy[i] = listy[i] / 10
+
+    return listy
+
+
+def saveAverage(name, xs, ys):
+    xs2 = xs.astype(int)
+    #result = np.column_stack((xs2,ys))
+    #print(result)
+
+    file = "averaged_results/" + name + ".stats"
+    result = []
+    with open(file, 'w') as f:
+        for i in range(len(xs)):
+            content = str(xs2[i]) + "\t" + str(ys[i]) + "\n"
+            f.write(content)
+
+
+def main():
+    name = sys.argv[1]
+    steps = sys.argv[2]
+    virs = generateAverage(name, steps)
+    #print(virs)
+    timesteps = np.zeros(int(steps), dtype=int)
+    for i in range(int(steps)):
+        timesteps[i] = int(i)
+
+    timesteps = timesteps.astype(int)
+    saveAverage(name, timesteps, virs)
+
+
+if __name__=="__main__":
+    main()

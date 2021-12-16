@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#PBS -q default
+#PBS -l nodes=1:ppn=8
+#PBS -l walltime=10:00:00
+#PBS -N simcov_vaccinated_batch1
+#PBS -j oe
+#PBS -m bae
+#PBS -M jmccullough12@unm.edu
+
+module load gcc-10.2.0-gcc-4.8.5-cj4mljw
+
+module load upcxx-2021.3.0-gcc-10.2.0-python3-osslnvl
+
+module load cmake-3.20.2-gcc-10.2.0-olbc6i4
+
+cd $PBS_O_WORKDIR
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vaccinated.config --output=results_vaccinated_1
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vaccinated.config --output=results_vaccinated_2
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vaccinated.config --output=results_vaccinated_3
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vaccinated.config --output=results_vaccinated_4
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vaccinated.config --output=results_vaccinated_5

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#PBS -q default
+#PBS -l nodes=1:ppn=8
+#PBS -l walltime=10:00:00
+#PBS -N simcov_batch2
+#PBS -j oe
+#PBS -m bae
+#PBS -M jmccullough12@unm.edu
+
+module load gcc-10.2.0-gcc-4.8.5-cj4mljw
+
+module load upcxx-2021.3.0-gcc-10.2.0-python3-osslnvl
+
+module load cmake-3.20.2-gcc-10.2.0-olbc6i4
+
+cd $PBS_O_WORKDIR
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vc003_abe003.config --output=results_6
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vc003_abe003.config --output=results_7
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vc003_abe003.config --output=results_8
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vc003_abe003.config --output=results_9
+
+upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=vc003_abe003.config --output=results_10
